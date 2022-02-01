@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes  from "prop-types";
 import { useFirestore } from 'react-redux-firebase'
+import { Link } from "react-router-dom";
 
 function GameSetup(props) {
 	const firestore = useFirestore();
@@ -10,14 +11,14 @@ function GameSetup(props) {
 		props.onNewGameCreation(parseInt(event.target.words.value));
 
 		return firestore.collection("gameData").add({
-			wordCount: parseInt(event.target.words.value) // I DO NOT NEED TO PUT THIS IN DATABASE!
-			// TODO: ADD defaults for guessed letters & miss count to database
+			wordCount: parseInt(event.target.words.value)
 		});
 	}
 
 	return (
 		<React.Fragment>
 			<h3>Setup new game</h3>
+			<Link to="/signin">Sign in</Link>
 			<form onSubmit={addGameDataToFirestore}>
 				<b>Word count:</b>
 				<br />
