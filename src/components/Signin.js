@@ -1,5 +1,6 @@
 import React from "react";
 import firebase from "firebase/app";
+import { Link } from "react-router-dom";
 
 function Signin() {
 	function doSignUp(event) {
@@ -62,6 +63,8 @@ function Signin() {
 
 			<h1>Sign out</h1>
 			<button onClick={doSignOut}>Sign out</button>
+			<br />
+			<Link to="/">Go home</Link>
 		</React.Fragment>
 	);
 }

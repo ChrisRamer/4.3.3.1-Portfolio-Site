@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 function GameStats() {
 	return (
@@ -7,6 +8,7 @@ function GameStats() {
 			<p>Games played: 0</p>
 			<p>Games won: 0</p>
 			<p>Games lost: 0</p>
+			<Link to="/">Go home</Link>
 		</React.Fragment>
 	)
 }
