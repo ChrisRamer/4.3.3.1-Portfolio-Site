@@ -18,7 +18,11 @@ function GameSetup(props) {
 	return (
 		<React.Fragment>
 			<h3>Setup new game</h3>
+
 			<Link to="/signin">Sign in</Link>
+			<br />
+			<Link to="/stats">View my stats</Link>
+
 			<form onSubmit={addGameDataToFirestore}>
 				<b>Word count:</b>
 				<br />

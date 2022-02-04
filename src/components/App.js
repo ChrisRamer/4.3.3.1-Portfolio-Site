@@ -3,6 +3,7 @@ import Header from "./Header";
 import GameControl from "./GameControl";
 import Footer from "./Footer";
 import Signin from "./Signin";
+import GameStats from "./GameStats";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 function App() {
@@ -12,6 +13,9 @@ function App() {
 			<Switch>
 				<Route path="/signin">
 					<Signin />
+				</Route>
+				<Route path="/stats">
+					<GameStats />
 				</Route>
 				<Route path="/">
 					<GameControl />
