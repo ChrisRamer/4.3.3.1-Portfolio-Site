@@ -1,8 +1,20 @@
 import React from "react";
 import PropTypes from "prop-types";
 import LetterButtonList from "./LetterButtonList";
+import { useSelector } from "react-redux";
+import { useFirestoreConnect, isLoaded, isEmpty } from "react-redux-firebase";
 
 function GameResult(props) {
+	useFirestoreConnect([
+		{ collection: "gameData" }
+	]);
+
+	const gameData = useSelector(state => state.firestore.ordered.gameData);
+
+	if (isLoaded(gameData)) {
+		console.log("Loaded!");
+	}
+
 	function formatDisplayedSentence() {
 		let sentence = props.sentence.toLowerCase().replaceAll(' ', "\xa0\xa0");
 

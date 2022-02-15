@@ -1,18 +1,44 @@
 import React from "react";
 import PropTypes  from "prop-types";
-import { useFirestore } from 'react-redux-firebase'
+import {  useFirestoreConnect, isLoaded, useFirestore } from 'react-redux-firebase'
 import { Link } from "react-router-dom";
+import firebase from "firebase/app";
 
 function GameSetup(props) {
+	useFirestoreConnect([
+		{ collection: "gameData" }
+	]);
+
 	const firestore = useFirestore();
+	const auth = firebase.auth();
 
-	function addGameDataToFirestore(event) {
+	if (!isLoaded(auth)) {
+		console.log("Not loaded");
+	}
+
+	function AddGameDataToFirestore(event) {
 		event.preventDefault();
-		props.onNewGameCreation(parseInt(event.target.words.value));
+		const wordCount = parseInt(event.target.words.value);
+		props.onNewGameCreation(wordCount);
 
-		return firestore.collection("gameData").add({
-			wordCount: parseInt(event.target.words.value)
-		});
+		if (isLoaded(auth) && (auth.currentUser != null)) {
+			console.log("current user: " + auth.currentUser.uid);
+
+			const propsToUpdate = {
+				wordCount: wordCount
+			}
+
+			const query = { collection: "gameData", doc: auth.currentUser.uid.toString() };
+
+			firestore.get(query).then((snapshot) => {
+				if (snapshot.exists) {
+					firestore.update(query, propsToUpdate);
+				}
+				else {
+					firestore.collection("gameData").add(propsToUpdate);
+				}
+			});
+		}
 	}
 
 	return (
@@ -21,9 +47,17 @@ function GameSetup(props) {
 
 			<Link to="/signin">Sign in</Link>
 			<br />
-			<Link to="/stats">View my stats</Link>
+			<Link
+				to="/stats"
+				state={{
+					gamesPlayed: 'gamesPlayed',
+					gamesWon: 'gamesWon',
+					gamesLost: 'gamesLost'
+				}}>
+				View my stats
+			</Link>
 
-			<form onSubmit={addGameDataToFirestore}>
+			<form onSubmit={AddGameDataToFirestore}>
 				<b>Word count:</b>
 				<br />
 				<input
