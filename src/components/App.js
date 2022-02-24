@@ -5,8 +5,15 @@ import Footer from "./Footer";
 import Signin from "./Signin";
 import GameStats from "./GameStats";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { useFirestoreConnect, useFirestore } from 'react-redux-firebase'
 
 function App() {
+	useFirestoreConnect([
+		{ collection: "gameStats" }
+	]);
+
+	const firestore = useFirestore();
+
 	return (
 		<Router>
 			<Header />
@@ -18,7 +25,7 @@ function App() {
 					<GameStats />
 				</Route>
 				<Route path="/">
-					<GameControl />
+					<GameControl firestore={firestore}/>
 				</Route>
 			</Switch>
 			<Footer />

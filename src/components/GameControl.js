@@ -3,13 +3,20 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import GamePlay from "./GamePlay";
 import GameSetup from "./GameSetup";
+import firebase from "firebase/app";
+import { isLoaded } from "react-redux-firebase";
 
 class GameControl extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			inGameSetup: true
+			inGameSetup: true,
+			userStats: {}
 		};
+	}
+
+	componentDidMount() {
+		this.getOrCreateDatabaseEntry();
 	}
 
 	getSentence = (wordCount) => {
@@ -58,6 +65,42 @@ class GameControl extends React.Component {
 		dispatch(action);
 	}
 
+	async getOrCreateDatabaseEntry() {
+		const auth = firebase.auth();
+
+		if (isLoaded(auth)) {
+			if (auth.currentUser != null) {
+				const query = { collection: "gameStats", doc: auth.currentUser.uid };
+				const propsToUpdate = {
+					gamesPlayed: 0,
+					gamesWon: 0,
+					gamesLost: 0
+				};
+
+				await this.props.firestore.get(query).then((doc) => {
+					if (!doc.exists) {
+						this.props.firestore.collection("gameStats").doc(auth.currentUser.uid).set(propsToUpdate);
+						console.log("Created stats document for user " + auth.currentUser.uid);
+					}
+
+					const userStats = {
+						gamesPlayed: doc.get("gamesPlayed"),
+						gamesWon: doc.get("gamesWon"),
+						gamesLost: doc.get("gamesLost")
+					};
+
+					this.setState({ userStats: userStats });
+				});
+			}
+			else {
+				console.log("No user is signed in, so no stats will be stored for this session.");
+			}
+		}
+		else {
+			console.log("Auth not loaded");
+		}
+	}
+
 	render() {
 		let currentlyVisibleState = null;
 
@@ -67,7 +110,7 @@ class GameControl extends React.Component {
 			const defaultLettersNotGuessed = [
 				"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
 			];
-			currentlyVisibleState = <GamePlay sentence={this.props.selectedSentence} lettersNotGuessed={this.props.lettersNotGuessed || defaultLettersNotGuessed} onGuessedLetter={this.handleGuessingLetter} misses={this.props.misses || 0} />;
+			currentlyVisibleState = <GamePlay userStats={this.state.userStats} sentence={this.props.selectedSentence} lettersNotGuessed={this.props.lettersNotGuessed || defaultLettersNotGuessed} onGuessedLetter={this.handleGuessingLetter} misses={this.props.misses || 0} />;
 		}
 
 		return (
@@ -79,6 +122,7 @@ class GameControl extends React.Component {
 }
 
 GameControl.propTypes = {
+	firestore: PropTypes.object,
 	selectedSentence: PropTypes.string,
 	lettersNotGuessed: PropTypes.array,
 	misses: PropTypes.number
