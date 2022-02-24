@@ -20,7 +20,6 @@ function GameResult(props) {
 
 				props.firestore.get(query).then((doc) => {
 					if (doc.exists) {
-						console.log(stats);
 						props.firestore.collection("gameStats").doc(auth.currentUser.uid).set(stats);
 						console.log("Updated stats document for user " + auth.currentUser.uid);
 					}
