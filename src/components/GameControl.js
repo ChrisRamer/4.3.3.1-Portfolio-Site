@@ -110,7 +110,7 @@ class GameControl extends React.Component {
 			const defaultLettersNotGuessed = [
 				"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
 			];
-			currentlyVisibleState = <GamePlay userStats={this.state.userStats} sentence={this.props.selectedSentence} lettersNotGuessed={this.props.lettersNotGuessed || defaultLettersNotGuessed} onGuessedLetter={this.handleGuessingLetter} misses={this.props.misses || 0} />;
+			currentlyVisibleState = <GamePlay firestore={this.props.firestore} userStats={this.state.userStats} sentence={this.props.selectedSentence} lettersNotGuessed={this.props.lettersNotGuessed || defaultLettersNotGuessed} onGuessedLetter={this.handleGuessingLetter} misses={this.props.misses || 0} />;
 		}
 
 		return (

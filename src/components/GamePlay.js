@@ -5,13 +5,11 @@ import Image from "./Image";
 
 function GamePlay(props) {
 
-	//console.log(props.userStats["gamesPlayed"]);
-
 	return (
 		<React.Fragment>
 			<div className="gameplay">
 				<Image misses={props.misses} />
-				<GameResult userStats={props.userStats} sentence={props.sentence} lettersNotGuessed={props.lettersNotGuessed} onGuessedLetter={props.onGuessedLetter} misses={props.misses} />
+				<GameResult firestore={props.firestore} userStats={props.userStats} sentence={props.sentence} lettersNotGuessed={props.lettersNotGuessed} onGuessedLetter={props.onGuessedLetter} misses={props.misses} />
 			</div>
 		</React.Fragment>
 	)
@@ -19,6 +17,7 @@ function GamePlay(props) {
 }
 
 GamePlay.propTypes = {
+	firestore: PropTypes.object,
 	userStats: PropTypes.object,
 	sentence: PropTypes.string,
 	lettersNotGuessed: PropTypes.array,
