@@ -11,7 +11,8 @@ class GameControl extends React.Component {
 		super(props);
 		this.state = {
 			inGameSetup: true,
-			userStats: {}
+			userStats: {},
+			isSignedIn : false
 		};
 	}
 
@@ -89,7 +90,10 @@ class GameControl extends React.Component {
 						gamesLost: doc.get("gamesLost")
 					};
 
-					this.setState({ userStats: userStats });
+					this.setState({
+						userStats: userStats,
+						isSignedIn: true
+					});
 				});
 			}
 			else {
@@ -110,7 +114,7 @@ class GameControl extends React.Component {
 			const defaultLettersNotGuessed = [
 				"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
 			];
-			currentlyVisibleState = <GamePlay firestore={this.props.firestore} userStats={this.state.userStats} sentence={this.props.selectedSentence} lettersNotGuessed={this.props.lettersNotGuessed || defaultLettersNotGuessed} onGuessedLetter={this.handleGuessingLetter} misses={this.props.misses || 0} />;
+			currentlyVisibleState = <GamePlay firestore={this.props.firestore} isSignedIn={this.state.isSignedIn} userStats={this.state.userStats} sentence={this.props.selectedSentence} lettersNotGuessed={this.props.lettersNotGuessed || defaultLettersNotGuessed} onGuessedLetter={this.handleGuessingLetter} misses={this.props.misses || 0} />;
 		}
 
 		return (

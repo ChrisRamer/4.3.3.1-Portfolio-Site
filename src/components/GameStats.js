@@ -1,23 +1,30 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 function GameStats() {
 	const location = useLocation();
-	console.log(location.state);
-	// TODO: If location.state undefined, return 0 for stats
-	const { gamesPlayed } = location.state;
-	const { gamesWon } = location.state;
-	const { gamesLost } = location.state;
 
-	return (
-		<React.Fragment>
-			<h1>Total stats:</h1>
-			<p>Games played: {gamesPlayed}</p>
-			<p>Games won: {gamesWon}</p>
-			<p>Games lost: {gamesLost}</p>
-			<Link to="/">Go home</Link>
-		</React.Fragment>
-	)
+	if (location != null) {
+		const { stats } = location.state;
+		const gamesPlayed = stats["gamesPlayed"];
+		const gamesWon = stats["gamesWon"];
+		const gamesLost = stats["gamesLost"];
+
+		return (
+			<React.Fragment>
+				<h2>Your stats:</h2>
+				<p>Games played: {gamesPlayed}</p>
+				<p>Games won: {gamesWon}</p>
+				<p>Games lost: {gamesLost}</p>
+			</React.Fragment>
+		)
+	} else {
+		return (
+			<React.Fragment>
+				<p>You must be signed in to view your stats!</p>
+			</React.Fragment>
+		)
+	}
 }
 
 export default GameStats;

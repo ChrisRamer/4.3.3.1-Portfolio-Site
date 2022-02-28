@@ -7,6 +7,8 @@ import GameStats from "./GameStats";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { useFirestoreConnect, useFirestore } from 'react-redux-firebase'
 
+
+
 function App() {
 	useFirestoreConnect([
 		{ collection: "gameStats" }

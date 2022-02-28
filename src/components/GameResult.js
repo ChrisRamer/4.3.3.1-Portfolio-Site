@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import LetterButtonList from "./LetterButtonList";
 import firebase from "firebase/app";
 import { isLoaded } from "react-redux-firebase";
+import { Link } from "react-router-dom";
 
 function GameResult(props) {
 	let stats = {
@@ -15,7 +16,7 @@ function GameResult(props) {
 		const auth = firebase.auth();
 
 		if (isLoaded(auth)) {
-			if (auth.currentUser != null) {
+			if (props.isSignedIn) {
 				const query = { collection: "gameStats", doc: auth.currentUser.uid };
 
 				props.firestore.get(query).then((doc) => {
@@ -53,9 +54,22 @@ function GameResult(props) {
 				stats["gamesPlayed"] += 1;
 				updateStatsInDatabase();
 
+				let statsLink;
+
+				if (props.isSignedIn) {
+					statsLink = <Link to={{ pathname: "/stats", state: { stats: stats } }}>
+						View my stats
+					</Link>
+				} else {
+					statsLink = <p>You must be signed in to store and view stats</p>
+				}
+
 				return <div className="panel">
 					<p>{sentence}</p>
 					<p>You won!</p>
+
+					<br />
+					{statsLink}
 				</div>
 			}
 
@@ -68,9 +82,22 @@ function GameResult(props) {
 			stats["gamesPlayed"] += 1;
 			updateStatsInDatabase();
 
+			let statsLink;
+
+			if (props.isSignedIn) {
+				statsLink = <Link to={{ pathname: "/stats", state: { stats: stats } }}>
+					View my stats
+				</Link>
+			} else {
+				statsLink = <p>You must be signed in to store and view stats</p>
+			}
+
 			return <div className="panel">
 				<p>Ohno! You lost!</p>
 				<p>The sentence was <b>{props.sentence}</b></p>
+
+				<br />
+				{statsLink}
 			</div>
 		}
 	}
@@ -86,6 +113,7 @@ function GameResult(props) {
 
 GameResult.propTypes = {
 	firestore: PropTypes.object,
+	isSignedIn: PropTypes.bool,
 	userStats: PropTypes.object,
 	sentence: PropTypes.string,
 	lettersNotGuessed: PropTypes.array,
